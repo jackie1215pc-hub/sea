@@ -248,10 +248,27 @@
   .card.cannot {
     opacity: .62;
   }
+
+  .card.is-dimmed {
+    opacity: .48;
+  }
+
+  .cardOverlayLabel {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: .04em;
+    text-shadow: 0 1px 4px rgba(0,0,0,.35);
+    pointer-events: none;
+  }
   .card.closed::after {
-    content: "運休"; position: absolute; top: 12px; right: 12px;
-    background: rgba(252,165,165,.2); color: #ffd6d6; border: 1px solid rgba(252,165,165,.5);
-    border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 700;
+    content: none;
   }
   .cardHead { display: flex; align-items: start; gap: 10px; }
   .main { flex: 1; min-width: 0; }
@@ -677,18 +694,17 @@ function renderList(items) {
     if (item.babyCarrier) tags.push(`抱っこひも ${item.babyCarrier}`);
     if (item.lap) tags.push(`膝上 ${item.lap}`);
     if (item.priorityPass) tags.push(`PP ${item.priorityPass}`);
-
     if (item.sumire) tags.push(`すみれ ${item.sumire}`);
     if (item.shizuku) tags.push(`しずく ${item.shizuku}`);
     if (item.duration) tags.push(`所要時間 ${item.duration}`);
-
     if (item.cannotRide) tags.push('乗れない');
     if (isRidden(item)) tags.push('チェック済み');
 
     const waitClassName = waitClass(item.wait);
     const riddenLabel = isRidden(item) ? 'チェック解除' : '乗った';
-    const sumireClass = matchesOk(item.sumire) ? 'ok' : (normalize(item.sumire) === '△' ? 'midtext' : 'ng');
-    const shizukuClass = matchesOk(item.shizuku) ? 'ok' : (normalize(item.shizuku) === '△' ? 'midtext' : 'ng');
+
+    const isDimmed = item.closed || isRidden(item);
+    const overlayLabel = item.closed ? '運休' : (isRidden(item) ? '乗った' : '');
 
     const waitBoxHtml = item.waitUrl
       ? `<a class="waitBox ${waitClassName}" href="${escapeHtml(item.waitUrl)}" target="_blank" rel="noopener noreferrer">
@@ -703,7 +719,8 @@ function renderList(items) {
         </div>`;
 
     return `
-      <article class="card panel ${item.cannotRide ? 'cannot' : ''} ${item.closed ? 'closed' : ''}" data-name="${escapeHtml(item.name)}">
+      <article class="card panel ${item.cannotRide ? 'cannot' : ''} ${item.closed ? 'closed' : ''} ${isDimmed ? 'is-dimmed' : ''}" data-name="${escapeHtml(item.name)}">
+        ${overlayLabel ? `<div class="cardOverlayLabel">${overlayLabel}</div>` : ''}
         <div class="cardHead">
           <div class="main">
             <div class="nameRow">
