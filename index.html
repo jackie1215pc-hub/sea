@@ -50,22 +50,31 @@
     border-bottom: 1px solid var(--line);
   }
 
-  /* テスト */
-  .heroMap {
-    position: relative;
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-    background: rgba(255,255,255,.65);
-  }
+.heroMap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: rgba(255,255,255,.65);
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+}
 
-    /* .heroMap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1280 / 1167;
-      overflow: hidden;
-      background: rgba(255,255,255,.65);
-    } */
+.heroMap::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0) 0%,
+    rgba(247,248,251,1) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
 
   .heroMapViewport {
     position: absolute;
@@ -169,12 +178,16 @@
 
   .searchSection {
     position: relative;
-    z-index: 1;
-    margin: 12px -14px 12px;
+    z-index: 5;
+    margin: -24px -14px 12px;
     padding: 10px 14px 12px;
     background: rgba(247,248,251,.95);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
+  }
+
+  .searchSection {
+    border-radius: 18px 18px 0 0;
   }
 
   .searchRow {
@@ -406,13 +419,7 @@
 </head>
 <body>
 
-<div class="app">  .heroMap {
-    position: relative;
-    width: 100%;
-    height: 180px;
-    overflow: hidden;
-    background: rgba(255,255,255,.65);
-  }
+<div class="app">
   <div class="hero">
     <div class="heroMap">
       <div class="heroMapViewport">
