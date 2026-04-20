@@ -54,12 +54,35 @@
     position: relative;
     width: 100%;
     height: 180px;
-    background-image: url("map_all.jpg");
-    background-size: cover;
-    background-position: var(--hero-map-x, 50%) var(--hero-map-y, 50%);
-    background-repeat: no-repeat;
-    background-color: rgba(255,255,255,.65);
     overflow: hidden;
+    background: rgba(255,255,255,.65);
+  }
+
+  .heroMapViewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .heroMapCanvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    aspect-ratio: 1280 / 1167;
+    transform: translate(var(--map-offset-x, 0px), var(--map-offset-y, 0px));
+    transition: transform 0.45s ease;
+    transform-origin: top left;
+    will-change: transform;
+  }
+
+  .heroMapImage {
+    position: absolute;
+    inset: 0;
+    background-image: url("map_all.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .heroPins {
@@ -88,6 +111,22 @@
     font-size: 10px;
     font-weight: 800;
     line-height: 1;
+  }
+
+  .cardNo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+    background: rgba(255,255,255,.78);
+    border: 1px solid var(--line);
   }
 
   .cardNo {
@@ -291,8 +330,12 @@
 <div class="app">
   <div class="hero">
     <div class="heroMap">
-      <div class="heroMapImage"></div>
-      <div id="heroPins" class="heroPins"></div>
+      <div class="heroMapViewport">
+        <div id="heroMapCanvas" class="heroMapCanvas">
+          <div class="heroMapImage"></div>
+          <div id="heroPins" class="heroPins"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -723,6 +766,87 @@ function closeDetail() {
 }
 
 function renderVisiblePins() {
+  const heroPins = document.getElementById('heroPins');
+  const heroMap = document.querySelector('.heroMap');
+  const heroMapCanvas = document.getElementById('heroMapCanvas');
+  if (!heroPins || !heroMap || !heroMapCanvas) return;
+
+  const cards = Array.from(document.querySelectorAll('.card[data-name]'));
+  const candidates = [];
+
+  cards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    const cardCenterY = rect.top + rect.height / 2;
+    const viewportCenterY = window.innerHeight / 2;
+    const centerBandHalf = window.innerHeight * 0.18;
+
+    const isNearCenter =
+      cardCenterY >= viewportCenterY - centerBandHalf &&
+      cardCenterY <= viewportCenterY + centerBandHalf;
+
+    if (isNearCenter) {
+      const name = card.getAttribute('data-name');
+      const noText = card.querySelector('.cardNo')?.textContent || '';
+      const noMatch = noText.match(/\d+/);
+      const no = noMatch ? Number(noMatch[0]) : null;
+
+      if (name && PIN_POS[name]) {
+        const [x, y] = PIN_POS[name];
+        const distance = Math.abs(cardCenterY - viewportCenterY);
+        candidates.push({ name, no, x, y, distance });
+      }
+    }
+  });
+
+  candidates.sort((a, b) => a.distance - b.distance);
+
+  const pinItems = [];
+  const used = new Set();
+
+  candidates.forEach((item) => {
+    if (!used.has(item.name) && pinItems.length < 8) {
+      used.add(item.name);
+      pinItems.push(item);
+    }
+  });
+
+  const focusItem = pinItems[0] || null;
+
+  heroPins.innerHTML = pinItems.map((item) => {
+    return `
+      <span class="heroPin" style="left:${item.x}%; top:${item.y}%;" title="${escapeHtml(item.name)}">
+        <span class="heroPinNum">${item.no ?? ''}</span>
+      </span>
+    `;
+  }).join('');
+
+  const mapWidth = heroMap.clientWidth;
+  const mapHeight = Math.round(mapWidth * 1167 / 1280);
+  const viewportHeight = heroMap.clientHeight;
+
+  if (focusItem) {
+    const targetX = mapWidth * (focusItem.x / 100);
+    const targetY = mapHeight * (focusItem.y / 100);
+
+    const offsetX = mapWidth / 2 - targetX;
+    const offsetY = viewportHeight / 2 - targetY;
+
+    const minOffsetX = mapWidth - mapWidth;
+    const maxOffsetX = 0;
+    const minOffsetY = viewportHeight - mapHeight;
+    const maxOffsetY = 0;
+
+    const clampedX = Math.min(maxOffsetX, Math.max(minOffsetX, offsetX));
+    const clampedY = Math.min(maxOffsetY, Math.max(minOffsetY, offsetY));
+
+    heroMapCanvas.style.setProperty('--map-offset-x', `${clampedX}px`);
+    heroMapCanvas.style.setProperty('--map-offset-y', `${clampedY}px`);
+  } else {
+    const centeredY = Math.min(0, Math.max(viewportHeight - mapHeight, (viewportHeight - mapHeight) / 2));
+    heroMapCanvas.style.setProperty('--map-offset-x', `0px`);
+    heroMapCanvas.style.setProperty('--map-offset-y', `${centeredY}px`);
+  }
+}
   const heroPins = document.getElementById('heroPins');
   const heroMap = document.querySelector('.heroMap');
   if (!heroPins || !heroMap) return;
