@@ -719,21 +719,6 @@ function renderList(items) {
           ${waitBoxHtml}
         </div>
 
-        // <div class="statusRow">
-        //   <div class="status">
-        //     <div class="k">すみれ</div>
-        //     <div class="v ${sumireClass}">${escapeHtml(item.sumire || '—')}</div>
-        //   </div>
-        //   <div class="status">
-        //     <div class="k">しずく</div>
-        //     <div class="v ${shizukuClass}">${escapeHtml(item.shizuku || '—')}</div>
-        //   </div>
-        //   <div class="status">
-        //     <div class="k">所要時間</div>
-        //     <div class="v">${escapeHtml(item.duration || '—')}</div>
-        //   </div>
-        // </div>
-
         <div class="tags">
           ${tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
         </div>
