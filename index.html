@@ -238,7 +238,7 @@
   }
   .list { display: grid; gap: 12px; }
   .card {
-    padding: 14px;
+    padding: 10px;
     position: relative;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.72);
@@ -249,9 +249,11 @@
     opacity: .62;
   }
 
-  .card.is-dimmed {
-    opacity: .48;
-  }
+.card.is-dimmed {
+  opacity: 1;
+  background: rgba(180, 180, 180, 0.6);
+  filter: grayscale(100%);
+}
 
   .cardOverlayLabel {
     position: absolute;
@@ -270,7 +272,11 @@
   .card.closed::after {
     content: none;
   }
-  .cardHead { display: flex; align-items: start; gap: 10px; }
+  .cardHead {
+    display: flex;
+    align-items: start;
+    gap: 8px;
+  }
   .main { flex: 1; min-width: 0; }
   .nameRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -281,7 +287,10 @@
     font-size: 14px;
   }
   .name { font-size: 18px; font-weight: 800; line-height: 1.35; }
-  .meta { margin-top: 4px; color: var(--sub); font-size: 13px; line-height: 1.5; }
+  .meta {
+    margin-top: 2px;
+    font-size: 12px;
+  }
   .waitBox {
     min-width: 88px; text-align: center; padding: 10px 8px; border-radius: 16px;
     background: rgba(255,255,255,.06); border: 1px solid var(--line);
@@ -318,7 +327,12 @@
   .ok { color: #baf8d6; }
   .ng { color: #ffd1d1; }
   .midtext { color: #ffe4ac; }
-  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
   .tag {
     font-size: 12px; color: var(--sub); background: rgba(255,255,255,.05);
     border: 1px solid var(--line); padding: 7px 10px; border-radius: 999px;
