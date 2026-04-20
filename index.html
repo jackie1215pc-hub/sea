@@ -256,6 +256,29 @@
   .cardHead { display: flex; align-items: start; gap: 10px; }
   .main { flex: 1; min-width: 0; }
   .nameRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .waitInline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,.72);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .waitInlineLabel {
+    color: var(--sub);
+    font-weight: 600;
+  }
+
+  .waitInlineValue {
+    color: var(--text);
+    font-weight: 800;
+  }
   .star {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 28px; height: 28px; border-radius: 999px; font-weight: 800;
@@ -275,7 +298,10 @@
   .waitBox.mid { background: rgba(251,191,36,.11); border-color: rgba(251,191,36,.28); }
   .waitBox.long { background: rgba(252,165,165,.12); border-color: rgba(252,165,165,.28); }
   .statusRow {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
   }
   .status {
     background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 14px; padding: 10px;
@@ -290,7 +316,12 @@
     font-size: 12px; color: var(--sub); background: rgba(255,255,255,.05);
     border: 1px solid var(--line); padding: 7px 10px; border-radius: 999px;
   }
-  .actions { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; margin-top: 12px; }
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
   .btn {
     min-height: 44px; border-radius: 14px; border: 1px solid var(--line); display: flex; align-items: center;
     justify-content: center; gap: 6px; font-weight: 700; font-size: 14px;
@@ -336,7 +367,7 @@
   .closeX { min-width: 42px; min-height: 42px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,.07); color: var(--text); font-size: 22px; line-height: 1; }
   @media (max-width: 640px) {
     .summary { grid-template-columns: repeat(2, 1fr); }
-    .statusRow { grid-template-columns: repeat(2, 1fr); }
+    .statusRow { grid-template-columns: repeat(3, 1fr); }
     .detailGrid { grid-template-columns: 1fr; }
     .actions { grid-template-columns: 1fr 1fr; }
     .actions .btn.small { grid-column: span 2; }
@@ -433,23 +464,6 @@
   </div>
 </div>
 
-<dialog id="detailDialog">
-  <div class="modalHead">
-    <div>
-      <div id="modalTitle" class="modalTitle"></div>
-      <div id="modalSub" class="modalSub"></div>
-    </div>
-    <button id="closeDialogBtn" class="closeX" type="button" aria-label="閉じる">×</button>
-  </div>
-  <div class="modalBody">
-    <div id="detailGrid" class="detailGrid"></div>
-    <div class="modalActions">
-      <a id="detailLinkBtn" class="btn primary" target="_blank" rel="noopener noreferrer">詳細ページを開く</a>
-      <a id="waitLinkBtn" class="btn" target="_blank" rel="noopener noreferrer">待ち時間ページを開く</a>
-    </div>
-  </div>
-</dialog>
-
 <script>
 const DATA = [{"no": 1, "star": false, "name": "ヴェネツィアン・ゴンドラ", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/230/", "area": "メディテレーニアンハーバー", "place": "入口", "type": "ボート", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 5, "waitUrl": "https://www.temapa.jp/park/tdr/facility/230/?day=20260420", "duration": "11分30秒"}, {"no": 2, "star": false, "name": "ディズニーシー・トランジットスチーマーライン", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/227/", "area": "メディテレーニアンハーバー", "place": "入口", "type": "入口⇔奥（船）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 5, "waitUrl": "https://www.temapa.jp/park/tdr/facility/227/?day=20260420", "duration": "7分"}, {"no": 3, "star": false, "name": "フォートレス・エクスプロレーション", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/244/", "area": "メディテレーニアンハーバー", "place": "入口", "type": "散策（謎解き）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "△", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/244/?day=20260420", "duration": "-"}, {"no": 4, "star": true, "name": "ソアリン：ファンタスティック・フライト", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/219/", "area": "メディテレーニアンハーバー", "place": "入口", "type": "ライド", "closed": false, "sumire": "〇", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "102cm", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 60, "waitUrl": "https://www.temapa.jp/park/tdr/facility/219/?day=20260420", "duration": "5分"}, {"no": 5, "star": false, "name": "タワー・オブ・テラー", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/243/", "area": "アメリカンウォーターフロント", "place": "左手前", "type": "フリーフォール", "closed": false, "sumire": "〇", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "102cm", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 40, "waitUrl": "https://www.temapa.jp/park/tdr/facility/243/?day=20260420", "duration": "2分"}, {"no": 6, "star": false, "name": "トイ・ストーリー・マニア！", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/218/", "area": "アメリカンウォーターフロント", "place": "左手前", "type": "シューティング", "closed": false, "sumire": "〇", "shizuku": "△", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 50, "waitUrl": "https://www.temapa.jp/park/tdr/facility/218/?day=20260420", "duration": "7分"}, {"no": 7, "star": true, "name": "タートル・トーク", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/246/", "area": "アメリカンウォーターフロント", "place": "左手前", "type": "シアター", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "あり", "indoor": "○", "cannotRide": false, "wait": 25, "waitUrl": "https://www.temapa.jp/park/tdr/facility/246/?day=20260420", "duration": "30分"}, {"no": 8, "star": false, "name": "ディズニーシー・エレクトリックレールウェイ", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/231/", "area": "アメリカンウォーターフロント", "place": "左手前", "type": "左手前⇔左奥（汽車）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/231/?day=20260420", "duration": "2分30秒"}, {"no": 9, "star": false, "name": "ディズニーシー・トランジットスチーマーライン", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/228/", "area": "アメリカンウォーターフロント", "place": "左手前", "type": "船（周遊）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/228/?day=20260420", "duration": "13分"}, {"no": 10, "star": false, "name": "ビッグシティ・ヴィークル", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/233/", "area": "アメリカンウォーターフロント", "place": "左手前", "type": "車（周遊）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/233/?day=20260420", "duration": "10分"}, {"no": 11, "star": false, "name": "アクアトピア", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/234/", "area": "ポートディスカバリー", "place": "左奥", "type": "回転ライド", "closed": true, "sumire": "〇", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": true, "wait": 15, "waitUrl": "https://www.temapa.jp/park/tdr/facility/234/?day=20260420", "duration": "2分30秒"}, {"no": 12, "star": false, "name": "ニモ＆フレンズ・シーライダー", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/247/", "area": "ポートディスカバリー", "place": "左奥", "type": "モニターライド", "closed": false, "sumire": "〇", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "90cm", "priorityPass": "あり", "indoor": "○", "cannotRide": false, "wait": 30, "waitUrl": "https://www.temapa.jp/park/tdr/facility/247/?day=20260420", "duration": "5分"}, {"no": 13, "star": false, "name": "ディズニーシー・エレクトリックレールウェイ", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/232/", "area": "ポートディスカバリー", "place": "左奥", "type": "左手前⇔左奥（汽車）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/232/?day=20260420", "duration": "2分30秒"}, {"no": 14, "star": false, "name": "インディ・ジョーンズ®・アドベンチャー：クリスタルスカルの魔宮", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/222/", "area": "ロストリバーデルタ", "place": "奥", "type": "ライド激しめ", "closed": true, "sumire": "×", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "117cm", "priorityPass": "あり", "indoor": "○", "cannotRide": true, "wait": 40, "waitUrl": "https://www.temapa.jp/park/tdr/facility/222/?day=20260420", "duration": "3分"}, {"no": 15, "star": false, "name": "レイジングスピリッツ", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/242/", "area": "ロストリバーデルタ", "place": "奥", "type": "コースター", "closed": false, "sumire": "×", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "117cm", "priorityPass": "あり", "indoor": "×", "cannotRide": true, "wait": 35, "waitUrl": "https://www.temapa.jp/park/tdr/facility/242/?day=20260420", "duration": "1分30秒"}, {"no": 16, "star": false, "name": "ディズニーシー・トランジットスチーマーライン", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/228/", "area": "ロストリバーデルタ", "place": "奥", "type": "入口⇔奥（船）", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "", "lap": "可", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/228/?day=20260420", "duration": "6分"}, {"no": 17, "star": false, "name": "シンドバッド・ストーリーブック・ヴォヤッジ", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/235/", "area": "アラビアンコースト", "place": "右奥", "type": "鑑賞ライド", "closed": true, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": true, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/235/?day=20260420", "duration": "10分"}, {"no": 18, "star": false, "name": "ジャスミンのフライングカーペット", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/220/", "area": "アラビアンコースト", "place": "右奥", "type": "回転ライド", "closed": false, "sumire": "〇", "shizuku": "△", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 15, "waitUrl": "https://www.temapa.jp/park/tdr/facility/220/?day=20260420", "duration": "1分30秒"}, {"no": 19, "star": false, "name": "キャラバンカルーセル", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/236/", "area": "アラビアンコースト", "place": "右奥", "type": "メリーゴーランド", "closed": false, "sumire": "〇", "shizuku": "△", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/236/?day=20260420", "duration": "2分30秒"}, {"no": 20, "star": false, "name": "マジックランプシアター", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/226/", "area": "アラビアンコースト", "place": "右奥", "type": "シアター", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "あり", "indoor": "○", "cannotRide": false, "wait": 20, "waitUrl": "https://www.temapa.jp/park/tdr/facility/226/?day=20260420", "duration": "23分"}, {"no": 21, "star": true, "name": "スカットルのスクーター", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/238/", "area": "マーメイドラグーン", "place": "真ん中", "type": "コースター", "closed": false, "sumire": "〇", "shizuku": "△", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/238/?day=20260420", "duration": "1分30秒"}, {"no": 22, "star": true, "name": "フランダーのフライングフィッシュコースター", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/237/", "area": "マーメイドラグーン", "place": "真ん中", "type": "コースター", "closed": false, "sumire": "〇", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "90cm", "priorityPass": "", "indoor": "×", "cannotRide": false, "wait": 20, "waitUrl": "https://www.temapa.jp/park/tdr/facility/237/?day=20260420", "duration": "1分"}, {"no": 23, "star": false, "name": "アリエルのプレイグラウンド", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/202/", "area": "マーメイドラグーン", "place": "真ん中", "type": "散策", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/202/?day=20260420", "duration": "-"}, {"no": 24, "star": false, "name": "ジャンピン・ジェリーフィッシュ", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/239/", "area": "マーメイドラグーン", "place": "真ん中", "type": "上下ライド", "closed": false, "sumire": "〇", "shizuku": "△", "babyCarrier": "", "lap": "", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 15, "waitUrl": "https://www.temapa.jp/park/tdr/facility/239/?day=20260420", "duration": "1分"}, {"no": 25, "star": false, "name": "ブローフィッシュ・バルーンレース", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/240/", "area": "マーメイドラグーン", "place": "真ん中", "type": "回転ライド", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 15, "waitUrl": "https://www.temapa.jp/park/tdr/facility/240/?day=20260420", "duration": "1分30秒"}, {"no": 26, "star": false, "name": "ワールプール", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/241/", "area": "マーメイドラグーン", "place": "真ん中", "type": "コーヒーカップ", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 10, "waitUrl": "https://www.temapa.jp/park/tdr/facility/241/?day=20260420", "duration": "1分30秒"}, {"no": 27, "star": false, "name": "マーメイドラグーンシアター", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/221/", "area": "マーメイドラグーン", "place": "真ん中", "type": "ミュージカル", "closed": true, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": true, "wait": 20, "waitUrl": "https://www.temapa.jp/park/tdr/facility/221/?day=20260420", "duration": "14分"}, {"no": 28, "star": false, "name": "センター・オブ・ジ・アース", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/223/", "area": "ミステリアスアイランド", "place": "火山", "type": "コースター", "closed": false, "sumire": "×", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "117cm", "priorityPass": "", "indoor": "×", "cannotRide": true, "wait": 30, "waitUrl": "https://www.temapa.jp/park/tdr/facility/223/?day=20260420", "duration": "3分"}, {"no": 29, "star": false, "name": "海底2万マイル", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/224/", "area": "ミステリアスアイランド", "place": "火山", "type": "ライド", "closed": true, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "あり", "indoor": "○", "cannotRide": true, "wait": 15, "waitUrl": "https://www.temapa.jp/park/tdr/facility/224/?day=20260420", "duration": "5分"}, {"no": 30, "star": false, "name": "アナとエルサのフローズンジャーニー", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/255/", "area": "ファンタジースプリングス", "place": "最奥", "type": "鑑賞ライド", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 70, "waitUrl": "https://www.temapa.jp/park/tdr/facility/255/?day=20260420", "duration": "6分30秒"}, {"no": 31, "star": false, "name": "ラプンツェルのランタンフェスティバル", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/256/", "area": "ファンタジースプリングス", "place": "最奥", "type": "鑑賞ライド", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "可", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 50, "waitUrl": "https://www.temapa.jp/park/tdr/facility/256/?day=20260420", "duration": "5分"}, {"no": 32, "star": true, "name": "ピーターパンのネバーランドアドベンチャー", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/257/", "area": "ファンタジースプリングス", "place": "最奥", "type": "ライド", "closed": false, "sumire": "〇", "shizuku": "×", "babyCarrier": "", "lap": "", "height": "102cm", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 90, "waitUrl": "https://www.temapa.jp/park/tdr/facility/257/?day=20260420", "duration": "6分"}, {"no": 33, "star": false, "name": "フェアリー・ティンカーベルのビジーバギー", "detailUrl": "https://www.tokyodisneyresort.jp/tds/attraction/detail/258/", "area": "ファンタジースプリングス", "place": "最奥", "type": "ライド", "closed": false, "sumire": "〇", "shizuku": "〇", "babyCarrier": "", "lap": "可", "height": "", "priorityPass": "", "indoor": "○", "cannotRide": false, "wait": 20, "waitUrl": "https://www.temapa.jp/park/tdr/facility/258/?day=20260420", "duration": "2分"}];
 
@@ -493,14 +507,7 @@ const els = {
   secondarySortSelect: document.getElementById('secondarySortSelect'),
   showRideableBtn: document.getElementById('showRideableBtn'),
   showStarBtn: document.getElementById('showStarBtn'),
-  resetBtn: document.getElementById('resetBtn'),
-  detailDialog: document.getElementById('detailDialog'),
-  modalTitle: document.getElementById('modalTitle'),
-  modalSub: document.getElementById('modalSub'),
-  detailGrid: document.getElementById('detailGrid'),
-  detailLinkBtn: document.getElementById('detailLinkBtn'),
-  waitLinkBtn: document.getElementById('waitLinkBtn'),
-  closeDialogBtn: document.getElementById('closeDialogBtn'),
+  resetBtn: document.getElementById('resetBtn')
 };
 
 function loadPersisted() {
@@ -671,20 +678,26 @@ function renderList(items) {
 
   els.list.innerHTML = items.map(item => {
     const tags = [];
-    if (item.type) tags.push(item.type);
     if (item.height) tags.push(item.height);
     if (item.babyCarrier) tags.push(`抱っこひも ${item.babyCarrier}`);
     if (item.lap) tags.push(`膝上 ${item.lap}`);
     if (item.priorityPass) tags.push(`PP ${item.priorityPass}`);
-    if (item.indoor) tags.push(`室内 ${item.indoor}`);
     if (item.cannotRide) tags.push('乗れない');
     if (isRidden(item)) tags.push('チェック済み');
 
-    const waitClassName = waitClass(item.wait);
     const riddenLabel = isRidden(item) ? 'チェック解除' : '乗った';
     const sumireClass = matchesOk(item.sumire) ? 'ok' : (normalize(item.sumire) === '△' ? 'midtext' : 'ng');
     const shizukuClass = matchesOk(item.shizuku) ? 'ok' : (normalize(item.shizuku) === '△' ? 'midtext' : 'ng');
-    const indoorClass = matchesIndoor(item.indoor) ? 'ok' : 'ng';
+
+    const waitLinkHtml = item.waitUrl
+      ? `<a class="waitInline" href="${escapeHtml(item.waitUrl)}" target="_blank" rel="noopener noreferrer">
+          <span class="waitInlineLabel">平均待ち時間</span>
+          <span class="waitInlineValue">${displayWait(item.wait)}${item.wait == null ? '' : '分'}</span>
+        </a>`
+      : `<span class="waitInline">
+          <span class="waitInlineLabel">平均待ち時間</span>
+          <span class="waitInlineValue">${displayWait(item.wait)}</span>
+        </span>`;
 
     return `
       <article class="card panel ${item.cannotRide ? 'cannot' : ''} ${item.closed ? 'closed' : ''}" data-name="${escapeHtml(item.name)}">
@@ -694,13 +707,9 @@ function renderList(items) {
               <span class="cardNo">No.${item.no}</span>
               ${item.star ? '<span class="star">★</span>' : ''}
               <div class="name">${escapeHtml(item.name)}</div>
+              ${waitLinkHtml}
             </div>
-            <div class="meta">${escapeHtml(item.area)} / ${escapeHtml(item.place || '—')}${item.type ? ` / ${escapeHtml(item.type)}` : ''}</div>
-          </div>
-          <div class="waitBox ${waitClassName}">
-            <div class="cap">待ち時間</div>
-            <div class="num">${displayWait(item.wait)}</div>
-            <div class="unit">${item.wait == null ? '' : '分'}</div>
+            <div class="meta">${escapeHtml(item.area)} / ${escapeHtml(item.place || '—')}</div>
           </div>
         </div>
 
@@ -714,10 +723,6 @@ function renderList(items) {
             <div class="v ${shizukuClass}">${escapeHtml(item.shizuku || '—')}</div>
           </div>
           <div class="status">
-            <div class="k">室内</div>
-            <div class="v ${indoorClass}">${escapeHtml(item.indoor || '—')}</div>
-          </div>
-          <div class="status">
             <div class="k">所要時間</div>
             <div class="v">${escapeHtml(item.duration || '—')}</div>
           </div>
@@ -728,21 +733,11 @@ function renderList(items) {
         </div>
 
         <div class="actions">
-          <button class="btn primary" type="button" data-open-detail="${item.no}">詳細</button>
-          <a class="btn" href="${escapeHtml(item.waitUrl || item.detailUrl || '#')}" target="_blank" rel="noopener noreferrer">${item.waitUrl ? '待ち時間' : 'ページ'}</a>
           <button class="btn small" type="button" data-toggle-ridden="${item.no}">${riddenLabel}</button>
         </div>
       </article>
     `;
   }).join('');
-
-  els.list.querySelectorAll('[data-open-detail]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const no = Number(btn.getAttribute('data-open-detail'));
-      const item = DATA.find(d => d.no === no);
-      if (item) openDetail(item);
-    });
-  });
 
   els.list.querySelectorAll('[data-toggle-ridden]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -751,59 +746,6 @@ function renderList(items) {
       saveAndRender();
     });
   });
-}
-
-function openDetail(item) {
-  els.modalTitle.textContent = item.name;
-  els.modalSub.textContent = `${item.area} / ${item.place || '—'}`;
-
-  const detailItems = [
-    ['形式', item.type || '—'],
-    ['運休', item.closed ? '運休' : '—'],
-    ['乗れない', item.cannotRide ? 'はい' : 'いいえ'],
-    ['待ち時間', item.wait == null ? '—' : `${item.wait}分`],
-    ['所要時間', item.duration || '—'],
-    ['すみれ', item.sumire || '—'],
-    ['しずく', item.shizuku || '—'],
-    ['抱っこひも', item.babyCarrier || '—'],
-    ['膝上', item.lap || '—'],
-    ['身長', item.height || '—'],
-    ['プライオリティパス', item.priorityPass || '—'],
-    ['室内', item.indoor || '—'],
-  ];
-
-  els.detailGrid.innerHTML = detailItems.map(([k, v]) => `
-    <div class="detailItem">
-      <div class="k">${escapeHtml(k)}</div>
-      <div class="v">${escapeHtml(v)}</div>
-    </div>
-  `).join('');
-
-  if (item.detailUrl) {
-    els.detailLinkBtn.href = item.detailUrl;
-    els.detailLinkBtn.style.pointerEvents = '';
-    els.detailLinkBtn.style.opacity = '1';
-  } else {
-    els.detailLinkBtn.removeAttribute('href');
-    els.detailLinkBtn.style.pointerEvents = 'none';
-    els.detailLinkBtn.style.opacity = '.45';
-  }
-
-  if (item.waitUrl) {
-    els.waitLinkBtn.href = item.waitUrl;
-    els.waitLinkBtn.style.pointerEvents = '';
-    els.waitLinkBtn.style.opacity = '1';
-  } else {
-    els.waitLinkBtn.removeAttribute('href');
-    els.waitLinkBtn.style.pointerEvents = 'none';
-    els.waitLinkBtn.style.opacity = '.45';
-  }
-
-  els.detailDialog.showModal();
-}
-
-function closeDetail() {
-  if (els.detailDialog.open) els.detailDialog.close();
 }
 
 function renderVisiblePins() {
@@ -947,13 +889,6 @@ function bindEvents() {
     saveAndRender();
   });
   els.resetBtn.addEventListener('click', resetFilters);
-  els.closeDialogBtn.addEventListener('click', closeDetail);
-  els.detailDialog.addEventListener('click', (e) => {
-    const rect = els.detailDialog.getBoundingClientRect();
-    const isInDialog = rect.top <= e.clientY && e.clientY <= rect.top + rect.height
-      && rect.left <= e.clientX && e.clientX <= rect.left + rect.width;
-    if (!isInDialog) closeDetail();
-  });
   window.addEventListener('scroll', renderVisiblePins, { passive: true });
   window.addEventListener('resize', renderVisiblePins);
 }
