@@ -291,6 +291,7 @@
 <div class="app">
   <div class="hero">
     <div class="heroMap">
+      <div class="heroMapImage"></div>
       <div id="heroPins" class="heroPins"></div>
     </div>
   </div>
@@ -759,26 +760,28 @@ function renderVisiblePins() {
   });
 
   const pinItems = deduped.slice(0, 8);
+  const focusItem = deduped.length ? deduped[deduped.length - 1] : null;
+
+  const focusX = focusItem ? focusItem.x : 50;
+  const focusY = focusItem ? focusItem.y : 50;
+
+  heroMap.style.setProperty('--hero-map-x', `${focusX}%`);
+  heroMap.style.setProperty('--hero-map-y', `${focusY}%`);
 
   heroPins.innerHTML = pinItems.map((item) => {
+    const offsetX = item.x - focusX;
+    const offsetY = item.y - focusY;
+
+    const left = 50 + offsetX;
+    const top = 50 + offsetY;
+
     return `
-      <span class="heroPin" style="left:${item.x}%; top:${item.y}%;" title="${escapeHtml(item.name)}">
+      <span class="heroPin" style="left:${left}%; top:${top}%;" title="${escapeHtml(item.name)}">
         <span class="heroPinNum">${item.no ?? ''}</span>
       </span>
     `;
   }).join('');
-
-  const focusItem = deduped.length ? deduped[deduped.length - 1] : null;
-
-  if (focusItem) {
-    heroMap.style.setProperty('--hero-map-x', `${focusItem.x}%`);
-    heroMap.style.setProperty('--hero-map-y', `${focusItem.y}%`);
-  } else {
-    heroMap.style.setProperty('--hero-map-x', '50%');
-    heroMap.style.setProperty('--hero-map-y', '50%');
-  }
 }
-
 function render() {
   buildQuickFilters();
   buildAreaFilters();
