@@ -53,12 +53,13 @@
   .heroMap {
     position: relative;
     width: 100%;
-    aspect-ratio: 1280 / 1167;
+    height: 180px;
     background-image: url("map_all.jpg");
-    background-size: 100% 100%;
-    background-position: center;
+    background-size: cover;
+    background-position: var(--hero-map-x, 50%) var(--hero-map-y, 50%);
     background-repeat: no-repeat;
     background-color: rgba(255,255,255,.65);
+    overflow: hidden;
   }
 
   .heroPins {
@@ -70,12 +71,39 @@
 
   .heroPin {
     position: absolute;
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     background: #ff3b30;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.88);
+  }
+
+  .heroPinNum {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .cardNo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+    background: rgba(255,255,255,.78);
+    border: 1px solid var(--line);
   }
 
   .searchSection {
@@ -578,6 +606,7 @@ function renderList(items) {
         <div class="cardHead">
           <div class="main">
             <div class="nameRow">
+              <span class="cardNo">No.${item.no}</span>
               ${item.star ? '<span class="star">★</span>' : ''}
               <div class="name">${escapeHtml(item.name)}</div>
             </div>
@@ -694,10 +723,11 @@ function closeDetail() {
 
 function renderVisiblePins() {
   const heroPins = document.getElementById('heroPins');
-  if (!heroPins) return;
+  const heroMap = document.querySelector('.heroMap');
+  if (!heroPins || !heroMap) return;
 
   const cards = Array.from(document.querySelectorAll('.card[data-name]'));
-  const visibleNames = [];
+  const visibleItems = [];
 
   cards.forEach((card) => {
     const rect = card.getBoundingClientRect();
@@ -707,18 +737,46 @@ function renderVisiblePins() {
 
     if (visibleHeight > 40) {
       const name = card.getAttribute('data-name');
+      const noText = card.querySelector('.cardNo')?.textContent || '';
+      const noMatch = noText.match(/\d+/);
+      const no = noMatch ? Number(noMatch[0]) : null;
+
       if (name && PIN_POS[name]) {
-        visibleNames.push(name);
+        const [x, y] = PIN_POS[name];
+        visibleItems.push({ name, no, x, y });
       }
     }
   });
 
-  const uniqueNames = [...new Set(visibleNames)].slice(0, 8);
+  const deduped = [];
+  const used = new Set();
 
-  heroPins.innerHTML = uniqueNames.map((name) => {
-    const [x, y] = PIN_POS[name];
-    return `<span class="heroPin" style="left:${x}%; top:${y}%;" title="${escapeHtml(name)}"></span>`;
+  visibleItems.forEach((item) => {
+    if (!used.has(item.name)) {
+      used.add(item.name);
+      deduped.push(item);
+    }
+  });
+
+  const pinItems = deduped.slice(0, 8);
+
+  heroPins.innerHTML = pinItems.map((item) => {
+    return `
+      <span class="heroPin" style="left:${item.x}%; top:${item.y}%;" title="${escapeHtml(item.name)}">
+        <span class="heroPinNum">${item.no ?? ''}</span>
+      </span>
+    `;
   }).join('');
+
+  const focusItem = deduped.length ? deduped[deduped.length - 1] : null;
+
+  if (focusItem) {
+    heroMap.style.setProperty('--hero-map-x', `${focusItem.x}%`);
+    heroMap.style.setProperty('--hero-map-y', `${focusItem.y}%`);
+  } else {
+    heroMap.style.setProperty('--hero-map-x', '50%');
+    heroMap.style.setProperty('--hero-map-y', '50%');
+  }
 }
 
 function render() {
