@@ -50,13 +50,21 @@
     border-bottom: 1px solid var(--line);
   }
 
-  .heroMap {
+  /* .heroMap {テスト
     position: relative;
     width: 100%;
     height: 180px;
     overflow: hidden;
     background: rgba(255,255,255,.65);
-  }
+  } */
+
+    .heroMap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1280 / 1167;
+      overflow: hidden;
+      background: rgba(255,255,255,.65);
+    }
 
   .heroMapViewport {
     position: absolute;
@@ -64,7 +72,7 @@
     overflow: hidden;
   }
 
-  .heroMapCanvas {
+  /* .heroMapCanvas {テスト
     position: absolute;
     left: 0;
     top: 0;
@@ -74,7 +82,19 @@
     transition: transform 0.45s ease;
     transform-origin: top left;
     will-change: transform;
-  }
+  } */
+
+    .heroMapCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1280 / 1167;
+      transform: none;
+      transition: none;
+      transform-origin: top left;
+      will-change: auto;
+    }
 
   .heroMapImage {
     position: absolute;
@@ -327,7 +347,13 @@
 </head>
 <body>
 
-<div class="app">
+<div class="app">  .heroMap {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: rgba(255,255,255,.65);
+  }
   <div class="hero">
     <div class="heroMap">
       <div class="heroMapViewport">
@@ -341,7 +367,7 @@
 
   <div id="coordDebug" style="
     position: fixed;
-    bottom: 10px;
+    top: 10px;
     right: 10px;
     background: #000;
     color: #fff;
@@ -833,32 +859,36 @@ function renderVisiblePins() {
     `;
   }).join('');
 
-  const mapWidth = heroMap.clientWidth;
-  const mapHeight = Math.round(mapWidth * 1167 / 1280);
-  const viewportHeight = heroMap.clientHeight;
+//   const mapWidth = heroMap.clientWidth;テスト
+//   const mapHeight = Math.round(mapWidth * 1167 / 1280);
+//   const viewportHeight = heroMap.clientHeight;
 
-  if (focusItem) {
-    const targetX = mapWidth * (focusItem.x / 100);
-    const targetY = mapHeight * (focusItem.y / 100);
+//   if (focusItem) {
+//     const targetX = mapWidth * (focusItem.x / 100);
+//     const targetY = mapHeight * (focusItem.y / 100);
 
-    const offsetX = mapWidth / 2 - targetX;
-    const offsetY = viewportHeight / 2 - targetY;
+//     const offsetX = mapWidth / 2 - targetX;
+//     const offsetY = viewportHeight / 2 - targetY;
 
-    const minOffsetX = mapWidth - mapWidth;
-    const maxOffsetX = 0;
-    const minOffsetY = viewportHeight - mapHeight;
-    const maxOffsetY = 0;
+//     const minOffsetX = mapWidth - mapWidth;
+//     const maxOffsetX = 0;
+//     const minOffsetY = viewportHeight - mapHeight;
+//     const maxOffsetY = 0;
 
-    const clampedX = Math.min(maxOffsetX, Math.max(minOffsetX, offsetX));
-    const clampedY = Math.min(maxOffsetY, Math.max(minOffsetY, offsetY));
+//     const clampedX = Math.min(maxOffsetX, Math.max(minOffsetX, offsetX));
+//     const clampedY = Math.min(maxOffsetY, Math.max(minOffsetY, offsetY));
 
-    heroMapCanvas.style.setProperty('--map-offset-x', `${clampedX}px`);
-    heroMapCanvas.style.setProperty('--map-offset-y', `${clampedY}px`);
-  } else {
-    const centeredY = Math.min(0, Math.max(viewportHeight - mapHeight, (viewportHeight - mapHeight) / 2));
-    heroMapCanvas.style.setProperty('--map-offset-x', `0px`);
-    heroMapCanvas.style.setProperty('--map-offset-y', `${centeredY}px`);
-  }
+//     heroMapCanvas.style.setProperty('--map-offset-x', `${clampedX}px`);
+//     heroMapCanvas.style.setProperty('--map-offset-y', `${clampedY}px`);
+//   } else {
+//     const centeredY = Math.min(0, Math.max(viewportHeight - mapHeight, (viewportHeight - mapHeight) / 2));
+//     heroMapCanvas.style.setProperty('--map-offset-x', `0px`);
+//     heroMapCanvas.style.setProperty('--map-offset-y', `${centeredY}px`);
+//   }
+
+  heroMapCanvas.style.setProperty('--map-offset-x', `0px`);
+  heroMapCanvas.style.setProperty('--map-offset-y', `0px`);
+
 }
 
 function render() {
