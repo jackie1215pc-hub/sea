@@ -339,6 +339,19 @@
     </div>
   </div>
 
+  <div id="coordDebug" style="
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: #000;
+    color: #fff;
+    padding: 6px 10px;
+    font-size: 12px;
+    z-index: 9999;
+    ">
+      -
+  </div>
+
   <div class="searchSection">
     <div class="searchRow">
       <input id="searchInput" class="search" type="search" placeholder="アトラクション名・形式・場所で検索">
@@ -956,6 +969,18 @@ const PIN_POS = {
   "ピーターパンのネバーランドアドベンチャー": [79, 19],
   "フェアリー・ティンカーベルのビジーバギー": [71, 30]
 };
+
+document.getElementById('heroMapCanvas').addEventListener('click', (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+
+  const x = (e.clientX - rect.left) / rect.width * 100;
+  const y = (e.clientY - rect.top) / rect.height * 100;
+
+  const result = `[${x.toFixed(1)}, ${y.toFixed(1)}]`;
+
+  console.log(result);
+  document.getElementById('coordDebug').textContent = result;
+});
 
 loadPersisted();
 bindEvents();
