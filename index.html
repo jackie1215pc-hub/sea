@@ -194,26 +194,6 @@
     padding: 24px; text-align: center; color: var(--sub);
   }
 
-  #mapPin {
-    position: fixed;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  #mapPin::after {
-    content: "";
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    background: red;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    left: var(--pin-x, 50%);
-    top: var(--pin-y, 50%);
-    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.85);
-  }
-
 .footerBar {
   position: fixed;
   left: 0;
@@ -263,7 +243,9 @@
 
 <div class="app">
   <div class="hero">
-    <div class="heroMap"></div>
+    <div class="heroMap">
+      <div id="heroPins" class="heroPins"></div>
+    </div>
   </div>
 
   <div class="searchSection">
@@ -575,7 +557,7 @@ function renderList(items) {
     const indoorClass = matchesIndoor(item.indoor) ? 'ok' : 'ng';
 
     return `
-      <article class="card panel ${item.cannotRide ? 'cannot' : ''} ${item.closed ? 'closed' : ''}">
+      <article class="card panel ${item.cannotRide ? 'cannot' : ''} ${item.closed ? 'closed' : ''}" data-name="${escapeHtml(item.name)}">
         <div class="cardHead">
           <div class="main">
             <div class="nameRow">
@@ -693,6 +675,35 @@ function closeDetail() {
   if (els.detailDialog.open) els.detailDialog.close();
 }
 
+function renderVisiblePins() {
+  const heroPins = document.getElementById('heroPins');
+  if (!heroPins) return;
+
+  const cards = Array.from(document.querySelectorAll('.card[data-name]'));
+  const visibleNames = [];
+
+  cards.forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    const visibleTop = Math.max(rect.top, 0);
+    const visibleBottom = Math.min(rect.bottom, window.innerHeight);
+    const visibleHeight = visibleBottom - visibleTop;
+
+    if (visibleHeight > 40) {
+      const name = card.getAttribute('data-name');
+      if (name && PIN_POS[name]) {
+        visibleNames.push(name);
+      }
+    }
+  });
+
+  const uniqueNames = [...new Set(visibleNames)].slice(0, 8);
+
+  heroPins.innerHTML = uniqueNames.map((name) => {
+    const [x, y] = PIN_POS[name];
+    return `<span class="heroPin" style="left:${x}%; top:${y}%;" title="${escapeHtml(name)}"></span>`;
+  }).join('');
+}
+
 function render() {
   buildQuickFilters();
   buildAreaFilters();
@@ -700,31 +711,7 @@ function render() {
   renderSummary(items);
   renderList(items);
 
-
-  const pin = document.getElementById("mapPin");
-  const heroMap = document.querySelector(".heroMap");
-
-  const current = items[0];
-  if (current && PIN_POS[current.name]) {
-    const [x, y] = PIN_POS[current.name];
-
-    pin.style.setProperty('--pin-x', x + '%');
-    pin.style.setProperty('--pin-y', y + '%');
-
-    if (heroMap) {
-      heroMap.style.setProperty('--hero-map-x', x + '%');
-      heroMap.style.setProperty('--hero-map-y', y + '%');
-    }
-  } else {
-    pin.style.setProperty('--pin-x', '50%');
-    pin.style.setProperty('--pin-y', '50%');
-
-    if (heroMap) {
-      heroMap.style.setProperty('--hero-map-x', '50%');
-      heroMap.style.setProperty('--hero-map-y', '50%');
-    }
-  }
-
+  renderVisiblePins();
 }
 
 function resetFilters() {
@@ -782,37 +769,48 @@ function bindEvents() {
       && rect.left <= e.clientX && e.clientX <= rect.left + rect.width;
     if (!isInDialog) closeDetail();
   });
+  window.addEventListener('scroll', renderVisiblePins, { passive: true });
+  window.addEventListener('resize', renderVisiblePins);
 }
 
 const PIN_POS = {
-  "ソアリン：ファンタスティック・フライト": [48, 43],
-  "トイ・ストーリー・マニア！": [34, 63],
-  "タワー・オブ・テラー": [18, 58],
-  "タートル・トーク": [22, 62],
-  "ニモ＆フレンズ・シーライダー": [28, 64],
-  "アクアトピア": [30, 58],
-  "センター・オブ・ジ・アース": [50, 52],
-  "インディ・ジョーンズ・アドベンチャー": [68, 42],
-  "レイジングスピリッツ": [63, 46],
-  "シンドバッド・ストーリーブック・ヴォヤッジ": [72, 36],
-  "マジックランプシアター": [78, 40],
-  "ジャスミンのフライングカーペット": [80, 45],
-  "キャラバンカルーセル": [75, 43],
-  "フランダーのフライングフィッシュコースター": [55, 40],
-  "ブローフィッシュ・バルーンレース": [58, 42],
-  "ジャンピン・ジェリーフィッシュ": [52, 43],
-  "スカットルのスクーター": [50, 40],
-  "海底2万マイル": [55, 55],
-  "ディズニーシー・トランジットスチーマーライン": [45, 60],
-  "ヴェネツィアン・ゴンドラ": [40, 60],
-  "ビッグシティ・ヴィークル": [25, 70],
-  "ディズニーシー・エレクトリックレールウェイ": [30, 55],
-  "フォートレス・エクスプロレーション": [42, 48],
-  "ザ・レオナルドチャレンジ": [44, 50],
-  "アリエルのプレイグラウンド": [55, 42],
-  "マーメイドラグーンシアター": [53, 44],
-  "フォートレス・エクスプロレーション（迷路）": [43, 49],
-  "ビッグバンドビート": [28, 68]
+  "ヴェネツィアン・ゴンドラ": [41, 49],
+  "ディズニーシー・トランジットスチーマーライン": [45, 53],
+  "フォートレス・エクスプロレーション": [44, 40],
+  "ソアリン：ファンタスティック・フライト": [42, 36],
+
+  "タワー・オブ・テラー": [18, 69],
+  "トイ・ストーリー・マニア！": [23, 63],
+  "タートル・トーク": [24, 78],
+  "ディズニーシー・エレクトリックレールウェイ": [33, 56],
+  "ビッグシティ・ヴィークル": [20, 78],
+
+  "アクアトピア": [67, 39],
+  "ニモ＆フレンズ・シーライダー": [69, 34],
+
+  "インディ・ジョーンズ®・アドベンチャー：クリスタルスカルの魔宮": [65, 17],
+  "レイジングスピリッツ": [61, 22],
+
+  "シンドバッド・ストーリーブック・ヴォヤッジ": [84, 49],
+  "ジャスミンのフライングカーペット": [80, 44],
+  "キャラバンカルーセル": [84, 40],
+  "マジックランプシアター": [86, 33],
+
+  "スカットルのスクーター": [59, 32],
+  "フランダーのフライングフィッシュコースター": [56, 28],
+  "アリエルのプレイグラウンド": [60, 38],
+  "ジャンピン・ジェリーフィッシュ": [55, 36],
+  "ブローフィッシュ・バルーンレース": [59, 39],
+  "ワールプール": [57, 42],
+  "マーメイドラグーンシアター": [61, 35],
+
+  "センター・オブ・ジ・アース": [53, 48],
+  "海底2万マイル": [59, 52],
+
+  "アナとエルサのフローズンジャーニー": [79, 12],
+  "ラプンツェルのランタンフェスティバル": [88, 16],
+  "ピーターパンのネバーランドアドベンチャー": [84, 25],
+  "フェアリー・ティンカーベルのビジーバギー": [75, 10]
 };
 
 loadPersisted();
