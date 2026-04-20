@@ -60,11 +60,11 @@
 
   .searchSection {
     position: sticky;
-    top: calc(env(safe-area-inset-top) + 132px);
-    z-index: 19;
+    top: 0;
+    z-index: 30;
     margin: 0 -14px 12px;
-    padding: 10px 14px 12px;
-    background: rgba(247,248,251,.92);
+    padding: calc(env(safe-area-inset-top) + 10px) 14px 12px;
+    background: rgba(247,248,251,.95);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
   }
