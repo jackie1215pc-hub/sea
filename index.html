@@ -51,12 +51,31 @@
   }
 
   .heroMap {
-    height: 132px;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1280 / 1167;
     background-image: url("map_all.jpg");
-    background-size: contain;
-    background-position: var(--hero-map-x, 50%) var(--hero-map-y, 50%);
+    background-size: 100% 100%;
+    background-position: center;
     background-repeat: no-repeat;
     background-color: rgba(255,255,255,.65);
+  }
+
+  .heroPins {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .heroPin {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #ff3b30;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.88);
   }
 
   .searchSection {
@@ -284,8 +303,6 @@
       </div>
     </div>
   </div>
-
-<div id="mapPin"></div>
 
   <div class="resultsHead">
     <div id="resultCount">0件</div>
