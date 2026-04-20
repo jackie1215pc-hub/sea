@@ -53,9 +53,10 @@
   .heroMap {
     height: 132px;
     background-image: url("map_all.jpg");
-    background-size: cover;
-    background-position: center;
+    background-size: contain;
+    background-position: var(--hero-map-x, 50%) var(--hero-map-y, 50%);
     background-repeat: no-repeat;
+    background-color: rgba(255,255,255,.65);
   }
 
   .searchSection {
@@ -701,15 +702,27 @@ function render() {
 
 
   const pin = document.getElementById("mapPin");
+  const heroMap = document.querySelector(".heroMap");
 
   const current = items[0];
   if (current && PIN_POS[current.name]) {
     const [x, y] = PIN_POS[current.name];
+
     pin.style.setProperty('--pin-x', x + '%');
     pin.style.setProperty('--pin-y', y + '%');
+
+    if (heroMap) {
+      heroMap.style.setProperty('--hero-map-x', x + '%');
+      heroMap.style.setProperty('--hero-map-y', y + '%');
+    }
   } else {
     pin.style.setProperty('--pin-x', '50%');
     pin.style.setProperty('--pin-y', '50%');
+
+    if (heroMap) {
+      heroMap.style.setProperty('--hero-map-x', '50%');
+      heroMap.style.setProperty('--hero-map-y', '50%');
+    }
   }
 
 }
