@@ -677,6 +677,11 @@ function renderList(items) {
     if (item.babyCarrier) tags.push(`抱っこひも ${item.babyCarrier}`);
     if (item.lap) tags.push(`膝上 ${item.lap}`);
     if (item.priorityPass) tags.push(`PP ${item.priorityPass}`);
+
+    if (item.sumire) tags.push(`すみれ ${item.sumire}`);
+    if (item.shizuku) tags.push(`しずく ${item.shizuku}`);
+    if (item.duration) tags.push(`所要時間 ${item.duration}`);
+
     if (item.cannotRide) tags.push('乗れない');
     if (isRidden(item)) tags.push('チェック済み');
 
@@ -714,20 +719,20 @@ function renderList(items) {
           ${waitBoxHtml}
         </div>
 
-        <div class="statusRow">
-          <div class="status">
-            <div class="k">すみれ</div>
-            <div class="v ${sumireClass}">${escapeHtml(item.sumire || '—')}</div>
-          </div>
-          <div class="status">
-            <div class="k">しずく</div>
-            <div class="v ${shizukuClass}">${escapeHtml(item.shizuku || '—')}</div>
-          </div>
-          <div class="status">
-            <div class="k">所要時間</div>
-            <div class="v">${escapeHtml(item.duration || '—')}</div>
-          </div>
-        </div>
+        // <div class="statusRow">
+        //   <div class="status">
+        //     <div class="k">すみれ</div>
+        //     <div class="v ${sumireClass}">${escapeHtml(item.sumire || '—')}</div>
+        //   </div>
+        //   <div class="status">
+        //     <div class="k">しずく</div>
+        //     <div class="v ${shizukuClass}">${escapeHtml(item.shizuku || '—')}</div>
+        //   </div>
+        //   <div class="status">
+        //     <div class="k">所要時間</div>
+        //     <div class="v">${escapeHtml(item.duration || '—')}</div>
+        //   </div>
+        // </div>
 
         <div class="tags">
           ${tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
