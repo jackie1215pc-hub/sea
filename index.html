@@ -29,18 +29,7 @@
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic UI", sans-serif;
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: url("map_all.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.45;
-    z-index: 0;
-    pointer-events: none;
-  }
+
   body { min-height: 100vh; }
   a { color: inherit; text-decoration: none; }
   .app {
@@ -54,15 +43,38 @@
     position: sticky;
     top: 0;
     z-index: 20;
-    margin: -14px -14px 14px;
-    padding: calc(env(safe-area-inset-top) + 14px) 14px 12px;
+    margin: -14px -14px 0;
+    padding-top: env(safe-area-inset-top);
     background: rgba(255,255,255,.94);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
   }
-  .title { font-size: 22px; font-weight: 800; letter-spacing: .01em; }
-  .subtitle { margin-top: 4px; color: var(--sub); font-size: 12px; }
-  .searchRow { margin-top: 12px; display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+
+  .heroMap {
+    height: 132px;
+    background-image: url("map_all.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .searchSection {
+    position: sticky;
+    top: calc(env(safe-area-inset-top) + 132px);
+    z-index: 19;
+    margin: 0 -14px 12px;
+    padding: 10px 14px 12px;
+    background: rgba(247,248,251,.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .searchRow {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
   .search {
     width: 100%;
     border: 1px solid var(--line);
@@ -251,8 +263,10 @@
 
 <div class="app">
   <div class="hero">
-    <div class="title">ディズニーシー アトラクション一覧</div>
-    <div class="subtitle">ローカル用 / リンクを開く運用向け</div>
+    <div class="heroMap"></div>
+  </div>
+
+  <div class="searchSection">
     <div class="searchRow">
       <input id="searchInput" class="search" type="search" placeholder="アトラクション名・形式・場所で検索">
       <button id="clearSearchBtn" class="iconBtn" type="button">クリア</button>
