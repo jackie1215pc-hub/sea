@@ -732,11 +732,15 @@ function renderVisiblePins() {
 
   cards.forEach((card) => {
     const rect = card.getBoundingClientRect();
-    const visibleTop = Math.max(rect.top, 0);
-    const visibleBottom = Math.min(rect.bottom, window.innerHeight);
-    const visibleHeight = visibleBottom - visibleTop;
+    const cardCenterY = rect.top + rect.height / 2;
+    const viewportCenterY = window.innerHeight / 2;
+    const centerBandHalf = window.innerHeight * 0.22;
 
-    if (visibleHeight > 40) {
+    const isNearCenter =
+      cardCenterY >= viewportCenterY - centerBandHalf &&
+      cardCenterY <= viewportCenterY + centerBandHalf;
+
+    if (isNearCenter) {
       const name = card.getAttribute('data-name');
       const noText = card.querySelector('.cardNo')?.textContent || '';
       const noMatch = noText.match(/\d+/);
@@ -782,6 +786,7 @@ function renderVisiblePins() {
     `;
   }).join('');
 }
+
 function render() {
   buildQuickFilters();
   buildAreaFilters();
