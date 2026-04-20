@@ -847,69 +847,6 @@ function renderVisiblePins() {
     heroMapCanvas.style.setProperty('--map-offset-y', `${centeredY}px`);
   }
 }
-  const heroPins = document.getElementById('heroPins');
-  const heroMap = document.querySelector('.heroMap');
-  if (!heroPins || !heroMap) return;
-
-  const cards = Array.from(document.querySelectorAll('.card[data-name]'));
-  const visibleItems = [];
-
-  cards.forEach((card) => {
-    const rect = card.getBoundingClientRect();
-    const cardCenterY = rect.top + rect.height / 2;
-    const viewportCenterY = window.innerHeight / 2;
-    const centerBandHalf = window.innerHeight * 0.22;
-
-    const isNearCenter =
-      cardCenterY >= viewportCenterY - centerBandHalf &&
-      cardCenterY <= viewportCenterY + centerBandHalf;
-
-    if (isNearCenter) {
-      const name = card.getAttribute('data-name');
-      const noText = card.querySelector('.cardNo')?.textContent || '';
-      const noMatch = noText.match(/\d+/);
-      const no = noMatch ? Number(noMatch[0]) : null;
-
-      if (name && PIN_POS[name]) {
-        const [x, y] = PIN_POS[name];
-        visibleItems.push({ name, no, x, y });
-      }
-    }
-  });
-
-  const deduped = [];
-  const used = new Set();
-
-  visibleItems.forEach((item) => {
-    if (!used.has(item.name)) {
-      used.add(item.name);
-      deduped.push(item);
-    }
-  });
-
-  const pinItems = deduped.slice(0, 8);
-  const focusItem = deduped.length ? deduped[deduped.length - 1] : null;
-
-  const focusX = focusItem ? focusItem.x : 50;
-  const focusY = focusItem ? focusItem.y : 50;
-
-  heroMap.style.setProperty('--hero-map-x', `${focusX}%`);
-  heroMap.style.setProperty('--hero-map-y', `${focusY}%`);
-
-  heroPins.innerHTML = pinItems.map((item) => {
-    const offsetX = item.x - focusX;
-    const offsetY = item.y - focusY;
-
-    const left = 50 + offsetX;
-    const top = 50 + offsetY;
-
-    return `
-      <span class="heroPin" style="left:${left}%; top:${top}%;" title="${escapeHtml(item.name)}">
-        <span class="heroPinNum">${item.no ?? ''}</span>
-      </span>
-    `;
-  }).join('');
-}
 
 function render() {
   buildQuickFilters();
@@ -1018,44 +955,6 @@ const PIN_POS = {
   "ラプンツェルのランタンフェスティバル": [72, 23],
   "ピーターパンのネバーランドアドベンチャー": [79, 19],
   "フェアリー・ティンカーベルのビジーバギー": [71, 30]
-};
-  "ヴェネツィアン・ゴンドラ": [41, 49],
-  "ディズニーシー・トランジットスチーマーライン": [45, 53],
-  "フォートレス・エクスプロレーション": [44, 40],
-  "ソアリン：ファンタスティック・フライト": [42, 36],
-
-  "タワー・オブ・テラー": [18, 69],
-  "トイ・ストーリー・マニア！": [23, 63],
-  "タートル・トーク": [24, 78],
-  "ディズニーシー・エレクトリックレールウェイ": [33, 56],
-  "ビッグシティ・ヴィークル": [20, 78],
-
-  "アクアトピア": [67, 39],
-  "ニモ＆フレンズ・シーライダー": [69, 34],
-
-  "インディ・ジョーンズ®・アドベンチャー：クリスタルスカルの魔宮": [65, 17],
-  "レイジングスピリッツ": [61, 22],
-
-  "シンドバッド・ストーリーブック・ヴォヤッジ": [84, 49],
-  "ジャスミンのフライングカーペット": [80, 44],
-  "キャラバンカルーセル": [84, 40],
-  "マジックランプシアター": [86, 33],
-
-  "スカットルのスクーター": [59, 32],
-  "フランダーのフライングフィッシュコースター": [56, 28],
-  "アリエルのプレイグラウンド": [60, 38],
-  "ジャンピン・ジェリーフィッシュ": [55, 36],
-  "ブローフィッシュ・バルーンレース": [59, 39],
-  "ワールプール": [57, 42],
-  "マーメイドラグーンシアター": [61, 35],
-
-  "センター・オブ・ジ・アース": [53, 48],
-  "海底2万マイル": [59, 52],
-
-  "アナとエルサのフローズンジャーニー": [79, 12],
-  "ラプンツェルのランタンフェスティバル": [88, 16],
-  "ピーターパンのネバーランドアドベンチャー": [84, 25],
-  "フェアリー・ティンカーベルのビジーバギー": [75, 10]
 };
 
 loadPersisted();
