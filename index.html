@@ -541,6 +541,42 @@ const els = {
   resetBtn: document.getElementById('resetBtn')
 };
 
+function getNowTimeSlot() {
+  const now = new Date()
+  const h = now.getHours()
+  const m = now.getMinutes()
+
+  const total = h * 60 + m
+
+  const slots = [
+    510, 540, 570, 600, 630, 660, 690, 720,
+    750, 780, 810, 840, 870, 900, 930, 960,
+    990, 1020, 1050, 1080, 1110, 1140
+  ]
+
+  let closest = slots[0]
+  let minDiff = Infinity
+
+  slots.forEach(s => {
+    const diff = Math.abs(total - s)
+    if (diff < minDiff) {
+      minDiff = diff
+      closest = s
+    }
+  })
+
+  return closest
+}
+
+function getDynamicWait(item) {
+  const slot = getNowTimeSlot()
+
+  // Excelで追加した列を使う
+  const key = 'wait' + slot
+
+  return item[key]
+}
+
 function loadPersisted() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
@@ -731,14 +767,14 @@ function renderList(items) {
 
     const waitBoxHtml = item.waitUrl
       ? `<a class="waitBox ${waitClassName}" href="${escapeHtml(item.waitUrl)}" target="_blank" rel="noopener noreferrer">
-          <div class="cap">平均待ち時間</div>
-          <div class="num">${displayWait(item.wait)}</div>
-          <div class="unit">${item.wait == null ? '' : '分'}</div>
+          <div class="cap">平均待ち</div>
+          <div class="num">${displayWait(getDynamicWait(item))}</div>
+          <div class="unit">${getDynamicWait(item) == null ? '' : '分'}</div>
         </a>`
       : `<div class="waitBox ${waitClassName}">
-          <div class="cap">平均待ち時間</div>
-          <div class="num">${displayWait(item.wait)}</div>
-          <div class="unit">${item.wait == null ? '' : '分'}</div>
+          <div class="cap">平均待ち</div>
+          <div class="num">${displayWait(getDynamicWait(item))}</div>
+          <div class="unit">${getDynamicWait(item) == null ? '' : '分'}</div>
         </div>`;
 
     return `
