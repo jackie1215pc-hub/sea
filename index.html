@@ -569,12 +569,39 @@ function getNowTimeSlot() {
 }
 
 function getDynamicWait(item) {
-  const slot = getNowTimeSlot()
+  const now = new Date()
+  const h = now.getHours()
+  const m = now.getMinutes()
 
-  // Excelで追加した列を使う
-  const key = 'wait' + slot
+  const total = h * 60 + m
 
-  return item[key]
+  const slots = [
+    "0830","0900","0930","1000","1030","1100","1130","1200",
+    "1230","1300","1330","1400","1430","1500","1530","1600",
+    "1630","1700","1730","1800","1830","1900"
+  ]
+
+  const minutesMap = {
+    "0830": 510, "0900": 540, "0930": 570, "1000": 600,
+    "1030": 630, "1100": 660, "1130": 690, "1200": 720,
+    "1230": 750, "1300": 780, "1330": 810, "1400": 840,
+    "1430": 870, "1500": 900, "1530": 930, "1600": 960,
+    "1630": 990, "1700": 1020, "1730": 1050, "1800": 1080,
+    "1830": 1110, "1900": 1140
+  }
+
+  let closest = slots[0]
+  let minDiff = Infinity
+
+  slots.forEach(s => {
+    const diff = Math.abs(total - minutesMap[s])
+    if (diff < minDiff) {
+      minDiff = diff
+      closest = s
+    }
+  })
+
+  return item['wait' + closest]
 }
 
 function loadPersisted() {
@@ -609,9 +636,9 @@ function waitClass(wait) {
   return 'long';
 }
 
-function displayWait(wait) {
-  if (wait == null || wait === '') return '—';
-  return String(wait);
+function displayWait(val) {
+  if (val === '' || val == null) return '--'
+  return val
 }
 
 function normalize(val) {
